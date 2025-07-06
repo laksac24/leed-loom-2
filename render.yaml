@@ -1,3 +1,4 @@
+
 services:
   - type: web
     name: pitch-generator
@@ -7,7 +8,7 @@ services:
     plan: free
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.4
+        value: "3.11"
       - key: GOOGLE_CHROME_BIN
         value: /usr/bin/google-chrome
       - key: CHROMEDRIVER_PATH
