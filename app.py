@@ -5,7 +5,7 @@ import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import time
-from google import genai
+import google.generativeai as genai
 from google.genai import types
 from flask import Flask, render_template, request, send_file, jsonify
 import os
