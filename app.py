@@ -252,7 +252,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import time
 import google.generativeai as genai
-from google.generativeai.types import GenerateContentConfig
+from google.generativeai import types
 from flask import Flask, render_template, request, send_file, jsonify
 import os
 import shutil
@@ -389,7 +389,7 @@ def generate_pitch():
 
         response = model.generate_content(
             contents=[summary],
-            generation_config=GenerateContentConfig(
+            generation_config=types.GenerateContentConfig(
                 max_output_tokens=1000,
                 temperature=0.1,
                 system_instruction="generate complete latex code to create ppt to pitch to the company. The code should be short and complete. give only code and nothing else."
@@ -398,7 +398,7 @@ def generate_pitch():
 
         response2 = model.generate_content(
             contents=[response.text],
-            generation_config=GenerateContentConfig(
+            generation_config=types.GenerateContentConfig(
                 max_output_tokens=1000,
                 temperature=0.1,
                 system_instruction="debug the code. give only code and nothing else."
