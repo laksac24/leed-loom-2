@@ -445,7 +445,6 @@
 #     port = int(os.environ.get('PORT', 5000))
 #     app.run(host='0.0.0.0', port=port, debug=False)
 
-
 import requests
 from bs4 import BeautifulSoup
 import nltk
@@ -583,30 +582,41 @@ def generate_pitch():
         keywords = get_main_keywords(combined_text)
         summary = write_brand_summary(url, keywords, site_info)
 
-        # Gemini API call
+        # Configure Gemini
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel("gemini-1.5-flash")
 
+        # Step 1: Generate LaTeX code
         response = model.generate_content(
-            contents=[summary],
+            contents=[
+                {"role": "system", "parts": [
+                    "generate complete latex code to create ppt to pitch to the company. "
+                    "The code should be short and complete. give only code and nothing else."
+                ]},
+                {"role": "user", "parts": [summary]}
+            ],
             generation_config={
                 "max_output_tokens": 1000,
                 "temperature": 0.1,
                 "top_p": 1,
                 "top_k": 1
-            },
-            system_instruction="generate complete latex code to create ppt to pitch to the company. The code should be short and complete. give only code and nothing else."
+            }
         )
 
+        # Step 2: Debug the LaTeX code
         response2 = model.generate_content(
-            contents=[response.text],
+            contents=[
+                {"role": "system", "parts": [
+                    "debug the code. give only code and nothing else."
+                ]},
+                {"role": "user", "parts": [response.text]}
+            ],
             generation_config={
                 "max_output_tokens": 1000,
                 "temperature": 0.1,
                 "top_p": 1,
                 "top_k": 1
-            },
-            system_instruction="debug the code. give only code and nothing else."
+            }
         )
 
         result = str(response2.text).replace("```latex", "").replace("```", "").strip()
@@ -648,3 +658,4 @@ def download_pdf():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+
